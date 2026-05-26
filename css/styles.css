@@ -1,0 +1,39 @@
+body{
+
+    background: #f4f7fc;
+
+    font-family: Arial, sans-serif;
+
+}
+
+.dashboard-card{
+
+    padding: 25px;
+
+    border-radius: 15px;
+
+    text-align: center;
+
+    background: white;
+
+}
+
+.card{
+
+    border: none;
+
+    border-radius: 15px;
+
+}
+
+.event-card{
+
+    transition: 0.3s;
+
+}
+
+.event-card:hover{
+
+    transform: scale(1.02);
+
+}
