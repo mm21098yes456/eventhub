@@ -1,3 +1,5 @@
+import { obtenerEventos, guardarEventos, obtenerModo, guardarModo, inicializarSesion } from './storage.js';
+
 const formulario = document.getElementById("eventoForm");
 
 const listaEventos = document.getElementById("listaEventos");
@@ -14,7 +16,7 @@ const filtroCategoria = document.getElementById("filtroCategoria");
 
 const btnModoOscuro = document.getElementById("modoOscuro");
 
-let eventos = JSON.parse(localStorage.getItem("eventos")) || [];
+let eventos = obtenerEventos();
 
 let editando = false;
 
@@ -25,13 +27,7 @@ let grafico;
 
 
 // SESSION STORAGE
-sessionStorage.setItem(
-
-    "usuario",
-
-    "Administrador"
-
-);
+inicializarSesion();
 
 
 
@@ -59,6 +55,22 @@ busqueda.addEventListener("input", buscarEventos);
 filtroCategoria.addEventListener("change", filtrarCategoria);
 
 btnModoOscuro.addEventListener("click", cambiarModo);
+
+// ESCUCHADOR PARA EDITAR Y ELIMINAR 
+listaEventos.addEventListener("click", (e) => {
+    
+    const id = Number(e.target.dataset.id);
+    
+    if (!id) return;
+
+    if (e.target.classList.contains("btn-editar")) {
+        editarEvento(id);
+    } 
+
+    else if (e.target.classList.contains("btn-eliminar")) {
+        eliminarEvento(id);
+    }
+});
 
 
 
@@ -154,20 +166,10 @@ function guardarEvento(e){
 
 
         // LOCAL STORAGE
-        localStorage.setItem(
-
-            "eventos",
-
-            JSON.stringify(eventos)
-
-        );
-
-
+        guardarEventos(eventos);
 
         mostrarEventos();
-
         actualizarGrafico();
-
         formulario.reset();
 
 
@@ -287,9 +289,7 @@ function mostrarEventos(){
 
                         <button
 
-                            class="btn btn-warning me-2"
-
-                            onclick="editarEvento(${evento.id})"
+                            class="btn btn-warning me-2 btn-editar" data-id="${evento.id}"
 
                         >
 
@@ -301,9 +301,7 @@ function mostrarEventos(){
 
                         <button
 
-                            class="btn btn-danger"
-
-                            onclick="eliminarEvento(${evento.id})"
+                            class="btn btn-danger btn-eliminar" data-id="${evento.id}"
 
                         >
 
@@ -607,10 +605,8 @@ function cambiarModo(){
 
 
 // CARGAR MODO
-if(localStorage.getItem("modo") === "oscuro"){
-
+if(obtenerModo() === "oscuro"){
     document.body.classList.add("dark-mode");
-
 }
 
 
